@@ -525,7 +525,8 @@
                     "sku": "WP02562",
                     "name": "Erigo",
                     "description": "Cool clothes to be stylish at any time.",
-                    "price": 100000
+                    "price": 100000,
+                    "quantity": 34
                   }
                 }
               }
@@ -1143,6 +1144,9 @@
             "type": "string"
           },
           "price": {
+            "type": "integer"
+          },
+          "quantity": {
             "type": "integer"
           }
         }
