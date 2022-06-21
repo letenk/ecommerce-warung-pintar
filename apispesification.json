@@ -1,0 +1,1267 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "E-Commerce Warung Pintar",
+    "description": "Api spesification for E-Commerce Warung Pintar",
+    "contact": {
+      "name": "Rizky Darmawan",
+      "email": "darmawanrizky43@gmail.com",
+      "url": "http://jabutech.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Server development"
+    }
+  ],
+  "paths": {
+    "/api/v1/register": {
+      "post": {
+        "summary": "Register users",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              },
+              "example": {
+                "fullname": "Rizky Darmawan",
+                "email": "rizky@gmail.com",
+                "address": "Jl. Binjai No. 133",
+                "city": "Binjai",
+                "province": "Sumatera Utara",
+                "mobile": "082277760694",
+                "password": "password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success register users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "You have successfully registered."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Field error obtained from package validator",
+                      "items": {
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 400,
+                    "status": "error",
+                    "message": "Registered failed.",
+                    "data": {
+                      "errors": [
+                        "Fullname must be required.",
+                        "Format must be email address."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Other errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "summary": "Login users",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "example": {
+                "email": "rizky@jabutech.com",
+                "password": "password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "description": "Token have content: id_user, fullname, is_admin"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "You have Login.",
+                  "data": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIzNGUwNmZhMS1lN2E2LTQxZjMtYjI5Ny1lNDRjMjE3MWU1N2IiLCJmdWxsbmFtZSI6IlJpemt5IERhcm1hd2FuIiwiaXNfYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.XRIITRrmmDOkHe9phWhbK_wTsizXZNy0oLSPXBqfFwM"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error Or any errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "description": "Field error obtained from package validator",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 400,
+                    "status": "error",
+                    "message": "Login failed.",
+                    "data": [
+                      "Email must be required.",
+                      "Password minimum 3 characters."
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Other errors.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "description": "Only user with status <b>is_admin true</> can see list of users.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get all list users",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "fullname",
+            "in": "query",
+            "description": "User fullname",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all list users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "fullname": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "address": {
+                              "type": "string"
+                            },
+                            "city": {
+                              "type": "string"
+                            },
+                            "province": {
+                              "type": "string"
+                            },
+                            "mobile": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "List of users",
+                  "data": [
+                    {
+                      "id": "cd84146c-715f-47e8-a817-28331d49729c",
+                      "fullname": "Rizky Darmawan",
+                      "email": "rizky@gmail.com",
+                      "address": "Jl. Binjai No. 133",
+                      "city": "Binjai",
+                      "province": "Sumatera Utara",
+                      "mobile": "08237778739"
+                    },
+                    {
+                      "id": "fad7a07f-b4cc-428b-b405-124c1589f32c",
+                      "fullname": "Dwi Aprilia",
+                      "email": "dwi@gmail.com",
+                      "address": "Jl. Dewi Sartika No. 23",
+                      "city": "Binjai",
+                      "province": "Sumatera Utara",
+                      "mobile": "08227776379"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Get all data users Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Get all data users failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "summary": "Get all list products",
+        "tags": ["Products"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Product name",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all list products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ProductResponseCreateSuccess"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "List of users",
+                  "data": [
+                    {
+                      "id": "5b26d713-b7b8-4264-ab93-9da274d96acc",
+                      "name": "Tumbler Iron Man",
+                      "price": 40000,
+                      "quantity": 43
+                    },
+                    {
+                      "id": "89059682-3ef3-4dee-a873-1f47de3862ac",
+                      "name": "Iphone X",
+                      "price": 6500000,
+                      "quantity": 100
+                    },
+                    {
+                      "id": "aae4f3c0-fd52-403e-8ad6-d778fd50692a",
+                      "name": "REWORK",
+                      "price": 120000,
+                      "quantity": 200
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Get all data users Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Get all data users failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create new products.",
+        "tags": ["Products"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductCreate"
+              },
+              "example": {
+                "name": "Erigo",
+                "description": "Cool clothes to be stylish at any time.",
+                "price": 100000,
+                "quantity": 34
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create new data product success.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/ProductResponseCreateSuccess"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "Product has been created",
+                  "data": {
+                    "id": "cd84146c-715f-47e8-a817-28331d49729c",
+                    "sku": "WP02562",
+                    "name": "Erigo",
+                    "description": "Cool clothes to be stylish at any time.",
+                    "price": 100000
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Field error obtained from package validator",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 400,
+                    "status": "error",
+                    "message": "created product failed",
+                    "data": {
+                      "errors": ["Name must be required."]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Create product unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Create new data product failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/carts": {
+      "get": {
+        "description": "If the list carts that sees is a user with <b>is_admin</b> true, display all list carts. If no, show other <b>only user carts</b>.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Get all list carts",
+        "tags": ["Carts"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Cart id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all list carts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "user_fullname": {
+                              "type": "string"
+                            },
+                            "product_name": {
+                              "type": "string"
+                            },
+                            "quantity": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "List of users",
+                  "data": [
+                    {
+                      "id": "cd84146c-715f-47e8-a817-28331d49729c",
+                      "user_fullname": "Rizky Darmawan",
+                      "product_name": "Atomic Habits",
+                      "quantity": 2
+                    },
+                    {
+                      "id": "fad7a07f-b4cc-428b-b405-124c1589f32c",
+                      "user_fullname": "Dwi Aprilia",
+                      "product_name": "REWORK",
+                      "quantity": 2
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Get all data users Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Get all data users failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Added item into carts.",
+        "tags": ["Carts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartCreate"
+              },
+              "example": {
+                "user_id": "3a050048-c5ae-44fb-b4aa-1e7fd9403ab5",
+                "product_id": "cd84146c-715f-47e8-a817-28331d49729c",
+                "quantity": 2
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create cart response success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CartResponseCreateSuccess"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "Cart has been added.",
+                  "data": {
+                    "id": "dee5c5db-bc3e-4f4e-b806-7b3a8e29a2ea",
+                    "product_name": "Erigo",
+                    "quantity": 2
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Field error obtained from package validator",
+                      "items": {
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 400,
+                    "status": "error",
+                    "message": "Create cart failed",
+                    "data": {
+                      "errors": [
+                        "User id must be required.",
+                        "Product id must be required."
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Create cart unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Create new data product failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/orders": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create new orders",
+        "tags": ["Orders"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderCreate"
+              },
+              "example": {
+                "cart_id": [
+                  "458265f9-4bbc-452c-9212-74ef87644eb1",
+                  "aace62bf-d9cc-4ba9-8db6-d2357fd2c3f2",
+                  "3adae513-37b5-4c1e-9ea9-610d5b72cefd"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create order response success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "format": "int32"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/OrderResponseCreateSuccess"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "success",
+                  "message": "Cart has been added.",
+                  "data": {
+                    "id": "23bc6d22-0b44-4566-a5c2-098b75f1ce6d",
+                    "user_fullname": "Rizky Darmawan",
+                    "address": "Jl. Binjai No. 133",
+                    "status": "waiting payment",
+                    "invoice": {
+                      "id": "3bf66ec6-35d8-45ce-a763-13469b293c27",
+                      "invoice_number": "WPINV29322",
+                      "subtotal": 6860000,
+                      "delivery_fee": 15000,
+                      "total": 6875000,
+                      "status": "waiting payment"
+                    },
+                    "order_item": [
+                      {
+                        "id": "5b26d713-b7b8-4264-ab93-9da274d96acc",
+                        "name": "Tumbler Iron Man",
+                        "price": 40000,
+                        "quantity": 3,
+                        "total_amount": 120000
+                      },
+                      {
+                        "id": "89059682-3ef3-4dee-a873-1f47de3862ac",
+                        "name": "Iphone X",
+                        "price": 6500000,
+                        "quantity": 1,
+                        "total_amount": 6500000
+                      },
+                      {
+                        "id": "aae4f3c0-fd52-403e-8ad6-d778fd50692a",
+                        "name": "REWORK",
+                        "price": 120000,
+                        "quantity": 2,
+                        "total_amount": 240000
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Field error obtained from package validator",
+                      "items": {
+                        "type": "array"
+                      }
+                    }
+                  },
+                  "example": {
+                    "code": 400,
+                    "status": "error",
+                    "message": "Create order failed",
+                    "data": {
+                      "errors": ["cart id must be required"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Create cart unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 401,
+                  "status": "error",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Create new data product failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailedWithoutData"
+                },
+                "example": {
+                  "code": 500,
+                  "status": "error",
+                  "message": "Internal Server error."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Authentication with JWT"
+      }
+    },
+    "schemas": {
+      "Register": {
+        "type": "object",
+        "properties": {
+          "fullname": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "email": {
+            "type": "string",
+            "required": ["true"],
+            "description": "Email must be unique."
+          },
+          "address": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "city": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "province": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "mobile": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "password": {
+            "type": "string",
+            "required": ["true"],
+            "minLength": 3
+          },
+          "isAdmin": {
+            "type": "integer",
+            "required": ["false"],
+            "default": 0,
+            "description": "If isAdmin empty, default value 0 (false)"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "password": {
+            "type": "string",
+            "required": ["true"],
+            "minLength": 3
+          }
+        }
+      },
+      "ResponseFailedWithData": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ResponseFailedWithoutData": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ProductCreate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProductResponseCreateSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id product format UUID"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "integer"
+          }
+        }
+      },
+      "CartCreate": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "product_id": {
+            "type": "string",
+            "required": ["true"]
+          },
+          "quantity": {
+            "type": "integer",
+            "required": ["true"]
+          }
+        }
+      },
+      "CartResponseCreateSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id cart format UUID"
+          },
+          "product_name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      },
+      "OrderCreate": {
+        "type": "object",
+        "properties": {
+          "cart_id": {
+            "type": "array",
+            "required": ["true"],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "OrderResponseCreateSuccess": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id order format UUID"
+          },
+          "user_fullname": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waiting payment",
+              "processing",
+              "in delivery",
+              "delivered"
+            ]
+          },
+          "invoice": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "invoice_number": {
+                "type": "string"
+              },
+              "subtotal": {
+                "type": "integer"
+              },
+              "delivery_fee": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["waiting payment", "paid"]
+              }
+            }
+          },
+          "order_item": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "integer"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "total_amount": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
