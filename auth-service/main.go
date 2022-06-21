@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -23,5 +24,12 @@ func main() {
 
 	// Router
 	server := routes.SetupRouter(db)
-	server.Run()
+
+	envPort := os.Getenv("APP_PORT")
+	port := fmt.Sprintf(":%s", envPort)
+	if envPort == "" {
+		port = ":8801"
+	}
+
+	server.Run(port)
 }
