@@ -183,3 +183,134 @@ func TestRegisterValidationError(t *testing.T) {
 	assert.NotZero(t, responseBody["data"])
 	assert.NotNil(t, responseBody["data"].(map[string]interface{})["errors"])
 }
+
+func loginRandomAccount(t *testing.T, withIsAdmin bool) interface{} {
+	db := util.SetupTestDB()
+
+	account := createRandomAccount(t, withIsAdmin)
+	router := routes.SetupRouter(db)
+
+	// Data body with data from create account random
+	dataBody := fmt.Sprintf(`{"email": "%s", "password": "%s"}`, account.Email, account.Password)
+
+	// Create payload request
+	requestBody := strings.NewReader(dataBody)
+
+	// Create request
+	request := httptest.NewRequest(http.MethodPost, "http://localhost:8080/api/v1/auth/login", requestBody)
+	// Added header content type
+	request.Header.Add("Content-Type", "application/json")
+
+	// Create recorder
+	recorder := httptest.NewRecorder()
+
+	// Run server http
+	router.ServeHTTP(recorder, request)
+
+	// Get response
+	response := recorder.Result()
+
+	// Read response
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	// Decode json
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 200, response.StatusCode)
+	assert.Equal(t, 200, int(responseBody["code"].(float64)))
+	assert.Equal(t, "success", responseBody["status"])
+	assert.Equal(t, "You have successfully Login", responseBody["message"])
+	assert.NotZero(t, responseBody["data"])
+
+	// Get token for return use any test
+	token := responseBody["data"].(map[string]interface{})["token"]
+	assert.NotZero(t, token)
+	return token
+}
+
+// Test login success
+func TestLoginSuccess(t *testing.T) {
+	withIsAdmin := true
+	loginRandomAccount(t, withIsAdmin)
+}
+
+// Test credential incorrect
+func TestLoginCredentialIncorrect(t *testing.T) {
+	db := util.SetupTestDB()
+
+	router := routes.SetupRouter(db)
+
+	// Data body with data from create account random
+	dataBody := fmt.Sprintf(`{"email": "%s", "password": "%s"}`, "wrong@mail.cim", "wrong")
+
+	// Create payload request
+	requestBody := strings.NewReader(dataBody)
+
+	// Create request
+	request := httptest.NewRequest(http.MethodPost, "http://localhost:8080/api/v1/auth/login", requestBody)
+	// Added header content type
+	request.Header.Add("Content-Type", "application/json")
+
+	// Create recorder
+	recorder := httptest.NewRecorder()
+
+	// Run server http
+	router.ServeHTTP(recorder, request)
+
+	// Get response
+	response := recorder.Result()
+
+	// Read response
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	// Decode json
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 400, response.StatusCode)
+	assert.Equal(t, 400, int(responseBody["code"].(float64)))
+	assert.Equal(t, "error", responseBody["status"])
+	assert.Equal(t, "Login failed", responseBody["message"])
+	assert.NotZero(t, responseBody["data"])
+	assert.Equal(t, "email or password incorrect", responseBody["data"].(map[string]interface{})["errors"])
+}
+
+// Test validation error
+func TestLoginValidationError(t *testing.T) {
+	db := util.SetupTestDB()
+
+	router := routes.SetupRouter(db)
+
+	// Data body with data from create account random
+	dataBody := fmt.Sprintf(`{"email": "%s", "password": "%s"}`, "", "")
+
+	// Create payload request
+	requestBody := strings.NewReader(dataBody)
+
+	// Create request
+	request := httptest.NewRequest(http.MethodPost, "http://localhost:8080/api/v1/auth/login", requestBody)
+	// Added header content type
+	request.Header.Add("Content-Type", "application/json")
+
+	// Create recorder
+	recorder := httptest.NewRecorder()
+
+	// Run server http
+	router.ServeHTTP(recorder, request)
+
+	// Get response
+	response := recorder.Result()
+
+	// Read response
+	body, _ := io.ReadAll(response.Body)
+	var responseBody map[string]interface{}
+	// Decode json
+	json.Unmarshal(body, &responseBody)
+
+	assert.Equal(t, 400, response.StatusCode)
+	assert.Equal(t, 400, int(responseBody["code"].(float64)))
+	assert.Equal(t, "error", responseBody["status"])
+	assert.Equal(t, "Login failed", responseBody["message"])
+	assert.NotZero(t, responseBody["data"])
+	assert.NotZero(t, responseBody["data"])
+	assert.NotNil(t, responseBody["data"].(map[string]interface{})["errors"])
+}
