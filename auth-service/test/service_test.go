@@ -138,3 +138,67 @@ func TestIsEmailAvailable(t *testing.T) {
 
 	assert.Equal(t, true, user)
 }
+
+func randomLogin(t *testing.T) domain.User {
+	// Var withIsAdmin value true
+	withIsAdmin := true
+	newUser := createRandomAccountService(t, withIsAdmin)
+
+	// Open connection db
+	db := util.SetupTestDB()
+	// Use repository
+	userRepository := repository.NewRepositoryUser(db)
+	// Use service
+	userService := service.NewServiceUser(userRepository)
+
+	payload := web.LoginRequest{
+		Email:    newUser.Email,
+		Password: "password",
+	}
+
+	// Login
+	userLogin, err := userService.Login(payload)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.NotEmpty(t, userLogin.ID)
+	assert.Equal(t, newUser.Fullname, userLogin.Fullname)
+	assert.Equal(t, newUser.Email, userLogin.Email)
+	assert.Equal(t, newUser.Address, userLogin.Address)
+	assert.Equal(t, newUser.City, userLogin.City)
+	assert.Equal(t, newUser.Province, userLogin.Province)
+	assert.Equal(t, newUser.Mobile, userLogin.Mobile)
+	assert.Equal(t, 1, newUser.IsAdmin)
+
+	err = bcrypt.CompareHashAndPassword([]byte(userLogin.Password), []byte(payload.Password))
+	if err != nil {
+		log.Fatal("password not exist.")
+	}
+	assert.Nil(t, err)
+
+	return userLogin
+}
+
+func TestServiceLoginSuccess(t *testing.T) {
+	randomLogin(t)
+}
+
+func TestGenerateTokenSuccess(t *testing.T) {
+	user := randomLogin(t)
+
+	// Open connection db
+	db := util.SetupTestDB()
+	// Use repository
+	userRepository := repository.NewRepositoryUser(db)
+	// Use service
+	userService := service.NewServiceUser(userRepository)
+
+	// Generate token
+	token, err := userService.GenerateToken(user)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assert.NotEmpty(t, token)
+
+}
