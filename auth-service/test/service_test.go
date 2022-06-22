@@ -117,3 +117,24 @@ func TestRegisterErrorEmailUnique(t *testing.T) {
 	_, err := userService.Register(user)
 	assert.NotNil(t, err)
 }
+
+func TestIsEmailAvailable(t *testing.T) {
+	// Var withIsAdmin value true
+	withIsAdmin := true
+	newUser := CreateRandomAccountService(t, withIsAdmin)
+
+	// Open connection db
+	db := util.SetupTestDB()
+	// Use repository
+	userRepository := repository.NewRepositoryUser(db)
+	// Use service
+	userService := service.NewServiceUser(userRepository)
+
+	// Find user by email
+	user, err := userService.IsEmailAvailable(newUser.Email)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assert.Equal(t, true, user)
+}
