@@ -1,23 +1,23 @@
 package repository
 
 import (
-	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models"
+	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/domain"
 	"gorm.io/gorm"
 )
 
 type Repository interface {
-	Save(user models.User) (models.User, error)
+	Save(user domain.User) (domain.User, error)
 }
 
 type repository struct {
 	db *gorm.DB
 }
 
-func NewRepository(db *gorm.DB) *repository {
+func NewRepositoryUser(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) Save(user models.User) (models.User, error) {
+func (r *repository) Save(user domain.User) (domain.User, error) {
 	// Create new user on db
 	err := r.db.Save(&user).Error
 	// If err return object data user, with error
