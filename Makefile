@@ -1,3 +1,0 @@
-# Running test
-test:
-	go test -v ./...
