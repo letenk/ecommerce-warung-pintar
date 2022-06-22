@@ -13,7 +13,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateRandomAccount(t *testing.T, withIsAdmin bool) domain.User {
+// Func for create random account
+func CreateRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 	// Open connection db
 	db := util.SetupTestDB()
 	// Use repository
@@ -62,6 +63,7 @@ func CreateRandomAccount(t *testing.T, withIsAdmin bool) domain.User {
 		user.Password = string(passwordHash)
 	}
 
+	// Save to db
 	newUser, err := userRepository.Save(user)
 	if err != nil {
 		log.Fatal(err)
@@ -81,7 +83,7 @@ func CreateRandomAccount(t *testing.T, withIsAdmin bool) domain.User {
 		assert.Equal(t, newUser.IsAdmin, user.IsAdmin)
 	} else {
 		// is admin must be 0
-		assert.Equal(t, 0, user.IsAdmin)
+		assert.Equal(t, newUser.IsAdmin, 0)
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(newUser.Password), []byte(password))
@@ -93,25 +95,25 @@ func CreateRandomAccount(t *testing.T, withIsAdmin bool) domain.User {
 	return newUser
 }
 
-// Test success with is admin
-func TestRegisterWithIsAdmin(t *testing.T) {
+// Test success save user to db with is admin
+func TestUserSaveWithIsAdmin(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := true
-	CreateRandomAccount(t, withIsAdmin)
+	CreateRandomAccountRepository(t, withIsAdmin)
 }
 
-// Test success without is admin
-func TestRegisterWithoutIsAdmin(t *testing.T) {
+// Test success save user to db is admin
+func TestUserSaveWithoutIsAdmin(t *testing.T) {
 	// Var withIsAdmin value false
 	withIsAdmin := false
-	CreateRandomAccount(t, withIsAdmin)
+	CreateRandomAccountRepository(t, withIsAdmin)
 
 }
 
 // Test failed with email unique
-func TestRegisterErrorEmailUnique(t *testing.T) {
+func TestUserSaveErrorEmailUnique(t *testing.T) {
 	// Create random account
-	newUser := CreateRandomAccount(t, true)
+	newUser := CreateRandomAccountRepository(t, true)
 
 	// Open connection db
 	db := util.SetupTestDB()
