@@ -1,16 +1,23 @@
 package service
 
 import (
+	"errors"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/domain"
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/web"
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/repository"
+	"github.com/jabutech/ecommerce-warung-pintar/auth-service/util"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Service interface {
 	Register(input web.RegisterRequest) (domain.User, error)
+	Login(req web.LoginRequest) (domain.User, error)
 	IsEmailAvailable(email string) (bool, error)
+	GenerateToken(user domain.User) (string, error)
 }
 
 type service struct {
@@ -62,6 +69,31 @@ func (s *service) Register(req web.RegisterRequest) (domain.User, error) {
 	return newUser, nil
 }
 
+func (s *service) Login(req web.LoginRequest) (domain.User, error) {
+	// Get payload
+	email := req.Email
+	password := req.Password
+
+	// Find user by email
+	user, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return user, err
+	}
+
+	// If user not found
+	if user.ID == uuid.Nil {
+		return user, errors.New("email or password incorrect")
+	}
+
+	// If user is available, compare password hash with password from request use bcrypt
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return user, errors.New("email or password incorrect")
+	}
+
+	return user, nil
+}
+
 // EmailIsAvailable for check if email already exists or not
 func (s *service) IsEmailAvailable(email string) (bool, error) {
 
@@ -78,4 +110,37 @@ func (s *service) IsEmailAvailable(email string) (bool, error) {
 
 	// If is exist
 	return true, nil
+}
+
+type Claim struct {
+	UserID string `json:"user_id"`
+	jwt.StandardClaims
+}
+
+func (s *service) GenerateToken(user domain.User) (string, error) {
+	// Create 1 day
+	expirationTime := time.Now().AddDate(0, 0, 1)
+
+	// Create clain for payload token
+	claim := Claim{
+		UserID: user.ID.String(),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	// Create token
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+
+	// Load config
+	config, err := util.LoadConfig("../", "dev") // "../" as location file app.env in root folder
+
+	// Signed token with secret key
+	signedToken, err := token.SignedString([]byte(config.SecretKey))
+	if err != nil {
+		return signedToken, err
+	}
+
+	// If success, return token
+	return signedToken, nil
 }

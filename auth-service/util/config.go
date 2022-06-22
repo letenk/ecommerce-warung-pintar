@@ -6,6 +6,7 @@ import "github.com/spf13/viper"
 // The values are read by viper from a config file or environtment variables.
 type Config struct {
 	ENV        string `mapstructure:"ENV"`
+	SecretKey  string `mapstructure:"SECRET_KEY"`
 	DBHost     string `mapstructure:"DB_HOST"`
 	DBPort     string `mapstructure:"DB_PORT"`
 	DBUser     string `mapstructure:"DB_USER"`
