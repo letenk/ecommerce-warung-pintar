@@ -145,3 +145,29 @@ func TestUserSaveErrorEmailUnique(t *testing.T) {
 	_, err = userRepository.Save(user)
 	assert.NotNil(t, err)
 }
+
+func TestFindByEmail(t *testing.T) {
+	// Var withIsAdmin value true
+	withIsAdmin := true
+	newUser := CreateRandomAccountRepository(t, withIsAdmin)
+
+	// Open connection db
+	db := util.SetupTestDB()
+	// Use repository
+	userRepository := repository.NewRepositoryUser(db)
+
+	// Find user by email
+	user, err := userRepository.FindByEmail(newUser.Email)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assert.Equal(t, newUser.ID, user.ID)
+	assert.Equal(t, newUser.Fullname, user.Fullname)
+	assert.Equal(t, newUser.Email, user.Email)
+	assert.Equal(t, newUser.Address, user.Address)
+	assert.Equal(t, newUser.City, user.City)
+	assert.Equal(t, newUser.Province, user.Province)
+	assert.Equal(t, newUser.Mobile, user.Mobile)
+	assert.Equal(t, newUser.IsAdmin, user.IsAdmin)
+}
