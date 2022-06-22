@@ -9,10 +9,11 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d # create multiple database
     environment:
       MYSQL_USER: secret
+      MYSQL_ROOT_PASSWORD: secret
       MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: users
 volumes:
   mysql-data:
