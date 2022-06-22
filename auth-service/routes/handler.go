@@ -83,3 +83,59 @@ func (h *authHandler) Register(c *gin.Context) {
 	)
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *authHandler) Login(c *gin.Context) {
+	var req web.LoginRequest
+
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		errors := web.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+		response := web.ApiResponseWithData(
+			http.StatusBadRequest,
+			"error",
+			"Login failed",
+			errorMessage,
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// Login
+	userLogin, err := h.userService.Login(req)
+	if err != nil {
+		errorMessage := gin.H{"errors": err.Error()}
+		response := web.ApiResponseWithData(
+			http.StatusBadRequest,
+			"error",
+			"Login failed",
+			errorMessage,
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	// Generate token
+	token, err := h.userService.GenerateToken(userLogin)
+	if err != nil {
+		errorMessage := gin.H{"errors": "Server error"}
+		response := web.ApiResponseWithData(
+			http.StatusBadRequest,
+			"error",
+			"Register failed.",
+			errorMessage,
+		)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	fieldToken := gin.H{"token": token}
+	// Create format response
+	response := web.ApiResponseWithData(
+		http.StatusOK,
+		"success",
+		"You have successfully Login",
+		fieldToken,
+	)
+	c.JSON(http.StatusOK, response)
+}

@@ -22,6 +22,7 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	auth := router.Group("/api/v1/auth")
 
 	auth.POST("/register", authHandler.Register)
+	auth.POST("/login", authHandler.Login)
 
 	return router
 }
