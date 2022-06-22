@@ -71,7 +71,6 @@ func (s *service) IsEmailAvailable(email string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-
 	// If user.Id nil
 	if user.ID == uuid.Nil {
 		return false, nil

@@ -14,7 +14,7 @@ import (
 )
 
 // Func for create random account
-func CreateRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
+func createRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 	// Open connection db
 	db := util.SetupTestDB()
 	// Use repository
@@ -99,21 +99,21 @@ func CreateRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 func TestUserSaveWithIsAdmin(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := true
-	CreateRandomAccountRepository(t, withIsAdmin)
+	createRandomAccountRepository(t, withIsAdmin)
 }
 
 // Test success save user to db is admin
 func TestUserSaveWithoutIsAdmin(t *testing.T) {
 	// Var withIsAdmin value false
 	withIsAdmin := false
-	CreateRandomAccountRepository(t, withIsAdmin)
+	createRandomAccountRepository(t, withIsAdmin)
 
 }
 
 // Test failed with email unique
 func TestUserSaveErrorEmailUnique(t *testing.T) {
 	// Create random account
-	newUser := CreateRandomAccountRepository(t, true)
+	newUser := createRandomAccountRepository(t, true)
 
 	// Open connection db
 	db := util.SetupTestDB()
@@ -149,7 +149,7 @@ func TestUserSaveErrorEmailUnique(t *testing.T) {
 func TestFindByEmail(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := true
-	newUser := CreateRandomAccountRepository(t, withIsAdmin)
+	newUser := createRandomAccountRepository(t, withIsAdmin)
 
 	// Open connection db
 	db := util.SetupTestDB()

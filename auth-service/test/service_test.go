@@ -14,7 +14,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
+func createRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 	// Open connection db
 	db := util.SetupTestDB()
 	// Use repository
@@ -32,7 +32,7 @@ func CreateRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 		req.City = util.RandomCity()
 		req.Province = "sumatera utara"
 		req.Mobile = strconv.FormatInt(util.RandomMobile(), 10)
-		req.Password = "password"
+		req.Password = password
 		req.IsAdmin = true
 
 	} else {
@@ -42,7 +42,7 @@ func CreateRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 		req.City = util.RandomCity()
 		req.Province = "sumatera utara"
 		req.Mobile = strconv.FormatInt(util.RandomMobile(), 10)
-		req.Password = "password"
+		req.Password = password
 	}
 
 	// Register
@@ -81,20 +81,20 @@ func CreateRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 func TestRegisterWithIsAdmin(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := true
-	CreateRandomAccountService(t, withIsAdmin)
+	createRandomAccountService(t, withIsAdmin)
 }
 
 // Test success register without is admin
 func TestRegisterWithoutIsAdmin(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := false
-	CreateRandomAccountService(t, withIsAdmin)
+	createRandomAccountService(t, withIsAdmin)
 }
 
 // Test failed register with email unique
 func TestRegisterErrorEmailUnique(t *testing.T) {
 	// Create random account
-	newUser := CreateRandomAccountService(t, true)
+	newUser := createRandomAccountService(t, true)
 
 	// Open connection db
 	db := util.SetupTestDB()
@@ -121,7 +121,7 @@ func TestRegisterErrorEmailUnique(t *testing.T) {
 func TestIsEmailAvailable(t *testing.T) {
 	// Var withIsAdmin value true
 	withIsAdmin := true
-	newUser := CreateRandomAccountService(t, withIsAdmin)
+	newUser := createRandomAccountService(t, withIsAdmin)
 
 	// Open connection db
 	db := util.SetupTestDB()
