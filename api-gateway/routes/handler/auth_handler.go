@@ -3,7 +3,9 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jabutech/ecommerce-warung-pintar/api-gateway/models/web"
@@ -15,11 +17,40 @@ func Register(c *gin.Context) {
 	// Get payload
 	c.ShouldBindJSON(&req)
 
-	jsonValue, _ := json.Marshal(req)
+	jsonValue, err := json.Marshal(req)
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
 
-	request, _ := http.NewRequest(http.MethodPost, "http://localhost:8801/api/v1/auth/register", bytes.NewBuffer(jsonValue))
+	baseURL := fmt.Sprintf("http://%s", os.Getenv("AUTH_SERVICE_HOST"))
+	request, err := http.NewRequest(http.MethodPost, baseURL+"/api/v1/auth/register", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
 	request.Header.Add("Content-Type", "application/json")
-	response, _ := client.Do(request)
+	response, err := client.Do(request)
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
 
 	defer response.Body.Close()
 
@@ -35,11 +66,39 @@ func Login(c *gin.Context) {
 	// Get payload
 	c.ShouldBindJSON(&req)
 
-	jsonValue, _ := json.Marshal(req)
+	jsonValue, err := json.Marshal(req)
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
 
-	request, _ := http.NewRequest(http.MethodPost, "http://localhost:8801/api/v1/auth/login", bytes.NewBuffer(jsonValue))
+	request, err := http.NewRequest(http.MethodPost, "http://localhost:8801/api/v1/auth/login", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
 	request.Header.Add("Content-Type", "application/json")
-	response, _ := client.Do(request)
+	response, err := client.Do(request)
+	if err != nil {
+		response := web.ApiResponseWithoutData(
+			http.StatusInternalServerError,
+			"error",
+			err.Error(),
+		)
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
 
 	defer response.Body.Close()
 
