@@ -20,7 +20,6 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	router.Use(cors.Default())
 
 	api := router.Group("/api/v1")
-	api.GET("/health", authHandler.Health)
 
 	auth := api.Group("/auth")
 
