@@ -26,7 +26,7 @@ func (s *service) Create(req web.CreateProductRequest) (domain.Product, error) {
 	post := domain.Product{
 		ID:          id,
 		Name:        req.Name,
-		Sku:         util.RandomSKU(),
+		Sku:         "WP" + util.RandomSKU(),
 		Description: req.Description,
 		Price:       req.Price,
 		Quantity:    req.Quantity,
