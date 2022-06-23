@@ -71,6 +71,8 @@ go test -v ./...
 
 [Postman Documentation](https://documenter.getpostman.com/view/12132212/UzBqnQDz)
 
+[ERD Documentation](https://dbdiagram.io/d/62b10c8f69be0b672c085fcb)
+
 ## Additional Goals
 
 For the next stage, will be built:
