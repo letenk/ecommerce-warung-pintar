@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  api_gateway:
+    build: api-gateway
+    environment:
+      AUTH_SERVICE_HOST: auth_service
+    ports:
+      - "80:8080"
+    restart: always
+    depends_on:
+      - auth_service
+  auth_service:
+    build: auth-service
+    environment:
+      DB_HOST: db_warung_pintar
+      DB_PORT: 3306
+      DB_USER: secret
+      DB_PASSWORD: secret
+      DB_NAME: users
+      SECRET_JWT: w4run6P1Nt42
+    # ports:
+    #   - "8801:8801"
+    restart: always
+    depends_on:
+      - db_warung_pintar
+  db_warung_pintar:
+    image: mysql:8.0
+    restart: always
+    tty: true
+    # ports:
+    #   - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d # create multiple database
+    environment:
+      MYSQL_USER: secret
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: users
+volumes:
+  mysql-data:
