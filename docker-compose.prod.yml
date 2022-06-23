@@ -4,7 +4,7 @@ services:
     build: api-gateway
     environment:
       AUTH_SERVICE_HOST: auth_service
-      PRODUCTS_SERVICE_HOST: product_service
+      PRODUCT_SERVICE_HOST: product_service
     ports:
       - "80:8080"
     restart: always

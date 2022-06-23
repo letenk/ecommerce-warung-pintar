@@ -160,7 +160,7 @@ func CreatePost(c *gin.Context) {
 
 func GetListProducts(c *gin.Context) {
 	client := &http.Client{}
-	baseURL := fmt.Sprintf("http://%s:8802/api/v1/products", os.Getenv("AUTH_SERVICE_HOST"))
+	baseURL := fmt.Sprintf("http://%s:8802/api/v1/products", os.Getenv("PRODUCT_SERVICE_HOST"))
 	request, err := http.NewRequest(http.MethodGet, baseURL, nil)
 	if err != nil {
 		response := web.ApiResponseWithoutData(
