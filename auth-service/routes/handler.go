@@ -16,6 +16,11 @@ func NewHandlerAuth(userService service.Service) *authHandler {
 	return &authHandler{userService}
 }
 
+func (h *authHandler) Health(c *gin.Context) {
+	c.JSON(http.StatusOK, "healthy")
+	return
+}
+
 func (h *authHandler) Register(c *gin.Context) {
 	var req web.RegisterRequest
 

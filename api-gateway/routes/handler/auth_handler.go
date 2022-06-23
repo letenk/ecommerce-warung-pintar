@@ -28,8 +28,8 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	baseURL := fmt.Sprintf("http://%s", os.Getenv("AUTH_SERVICE_HOST"))
-	request, err := http.NewRequest(http.MethodPost, baseURL+"/api/v1/auth/register", bytes.NewBuffer(jsonValue))
+	baseURL := fmt.Sprintf("http://%s:8801/api/v1/auth/register", os.Getenv("AUTH_SERVICE_HOST"))
+	request, err := http.NewRequest(http.MethodPost, baseURL, bytes.NewBuffer(jsonValue))
 	if err != nil {
 		response := web.ApiResponseWithoutData(
 			http.StatusInternalServerError,
@@ -77,7 +77,8 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	request, err := http.NewRequest(http.MethodPost, "http://localhost:8801/api/v1/auth/login", bytes.NewBuffer(jsonValue))
+	baseURL := fmt.Sprintf("http://%s:8801/api/v1/auth/login", os.Getenv("AUTH_SERVICE_HOST"))
+	request, err := http.NewRequest(http.MethodPost, baseURL, bytes.NewBuffer(jsonValue))
 	if err != nil {
 		response := web.ApiResponseWithoutData(
 			http.StatusInternalServerError,

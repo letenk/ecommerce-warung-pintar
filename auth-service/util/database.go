@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/domain"
 	"gorm.io/driver/mysql"
@@ -10,13 +11,13 @@ import (
 )
 
 func SetupDB() *gorm.DB {
-	// Load config
-	config, err := LoadConfig(".", "dev")
-	if err != nil {
-		log.Fatal("error load config: ", err.Error())
-	}
+	DBUser := os.Getenv("DB_USER")
+	DBPassword := os.Getenv("DB_PASSWORD")
+	DBHost := os.Getenv("DB_HOST")
+	DBPort := os.Getenv("DB_PORT")
+	DBName := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", DBUser, DBPassword, DBHost, DBPort, DBName)
 	// Open connection to db
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -33,13 +34,13 @@ func SetupDB() *gorm.DB {
 }
 
 func SetupTestDB() *gorm.DB {
-	// Load config
-	config, err := LoadConfig("../", "dev")
-	if err != nil {
-		log.Fatal("error load config: ", err.Error())
-	}
+	DBUser := os.Getenv("DB_USER")
+	DBPassword := os.Getenv("DB_PASSWORD")
+	DBHost := os.Getenv("DB_HOST")
+	DBPort := os.Getenv("DB_PORT")
+	DBName := os.Getenv("DB_NAME_TEST")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.DBUser, config.DBPassword, config.DBHost, config.DBPort, config.DBNameTest)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", DBUser, DBPassword, DBHost, DBPort, DBName)
 	// Open connection to db
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

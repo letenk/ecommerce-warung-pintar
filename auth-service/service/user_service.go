@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -9,7 +10,6 @@ import (
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/domain"
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/models/web"
 	"github.com/jabutech/ecommerce-warung-pintar/auth-service/repository"
-	"github.com/jabutech/ecommerce-warung-pintar/auth-service/util"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -132,11 +132,9 @@ func (s *service) GenerateToken(user domain.User) (string, error) {
 	// Create token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 
-	// Load config
-	config, err := util.LoadConfig("../", "dev") // "../" as location file app.env in root folder
-
+	SecretJWT := os.Getenv("SECRET_JWT")
 	// Signed token with secret key
-	signedToken, err := token.SignedString([]byte(config.SecretKey))
+	signedToken, err := token.SignedString([]byte(SecretJWT))
 	if err != nil {
 		return signedToken, err
 	}

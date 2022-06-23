@@ -19,7 +19,10 @@ func SetupRouter(db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	auth := router.Group("/api/v1/auth")
+	api := router.Group("/api/v1")
+	api.GET("/health", authHandler.Health)
+
+	auth := api.Group("/auth")
 
 	auth.POST("/register", authHandler.Register)
 	auth.POST("/login", authHandler.Login)
