@@ -42,6 +42,6 @@ func RandomNameProduct() string {
 }
 
 func RandomSKU() string {
-	sku := fmt.Sprintf("%v%s", RandomInt(0, 10), RandomString(10))
+	sku := fmt.Sprintf("%v%s", RandomInt(1, 9), RandomString(5))
 	return sku
 }

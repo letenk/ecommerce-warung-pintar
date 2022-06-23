@@ -7,7 +7,7 @@ import (
 
 type Repository interface {
 	Save(product domain.Product) (domain.Product, error)
-	FindAll(product domain.Product) ([]domain.Product, error)
+	FindAll() ([]domain.Product, error)
 }
 
 type repository struct {

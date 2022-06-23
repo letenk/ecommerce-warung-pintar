@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createRandomProduct(t *testing.T) domain.Product {
+func createRepositoryRandomProduct(t *testing.T) domain.Product {
 	db := util.SetupTestDB()
 
 	productRepository := repository.NewRepositoryProduct(db)
@@ -41,13 +41,13 @@ func createRandomProduct(t *testing.T) domain.Product {
 	return newProduct
 }
 func TestSaveProduct(t *testing.T) {
-	createRandomProduct(t)
+	createRepositoryRandomProduct(t)
 }
 
 func TestFindAllProducts(t *testing.T) {
 
 	for i := 0; i < 10; i++ {
-		createRandomProduct(t)
+		createRepositoryRandomProduct(t)
 	}
 
 	db := util.SetupTestDB()
