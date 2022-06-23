@@ -51,7 +51,7 @@ func (h *productHandler) Create(c *gin.Context) {
 	response := web.ApiResponseWithData(
 		http.StatusOK,
 		"success",
-		"You have successfully registered",
+		"Product successfully created",
 		web.FormatProductResponse(product),
 	)
 	c.JSON(http.StatusOK, response)
