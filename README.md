@@ -2,6 +2,14 @@
 
 Microservice to test Warung Pintar
 
+## Documentation
+
+[Swagger Documentation](https://app.swaggerhub.com/apis-docs/DARMAWANRIZKY43/warung_pintar/1.0.0)
+
+[Postman Documentation](https://documenter.getpostman.com/view/12132212/UzBqnQDz)
+
+[ERD Documentation](https://dbdiagram.io/d/62b10c8f69be0b672c085fcb)
+
 ## Installation
 
 Clone the project
@@ -64,14 +72,6 @@ export DB_NAME_TEST=product_tests
 ```bash
 go test -v ./...
 ```
-
-## Documentation
-
-[Swagger Documentation](https://app.swaggerhub.com/apis-docs/DARMAWANRIZKY43/warung_pintar/1.0.0)
-
-[Postman Documentation](https://documenter.getpostman.com/view/12132212/UzBqnQDz)
-
-[ERD Documentation](https://dbdiagram.io/d/62b10c8f69be0b672c085fcb)
 
 ## Additional Goals
 
