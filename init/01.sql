@@ -1,2 +1,4 @@
 CREATE DATABASE IF NOT EXISTS `user_tests`;
+CREATE DATABASE IF NOT EXISTS `products`;
+CREATE DATABASE IF NOT EXISTS `product_tests`;
 GRANT ALL ON *.* TO 'secret'@'%';
