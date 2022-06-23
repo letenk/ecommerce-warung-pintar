@@ -4,11 +4,13 @@ services:
     build: api-gateway
     environment:
       AUTH_SERVICE_HOST: auth_service
+      PRODUCTS_SERVICE_HOST: product_service
     ports:
       - "80:8080"
     restart: always
     depends_on:
       - auth_service
+      - product_service
   auth_service:
     build: auth-service
     environment:
@@ -20,6 +22,19 @@ services:
       SECRET_JWT: w4run6P1Nt42
     # ports:
     #   - "8801:8801"
+    restart: always
+    depends_on:
+      - db_warung_pintar
+  product_service:
+    build: product-service
+    environment:
+      DB_HOST: db_warung_pintar
+      DB_PORT: 3306
+      DB_USER: secret
+      DB_PASSWORD: secret
+      DB_NAME: products
+    # ports:
+    #   - "8802:8802"
     restart: always
     depends_on:
       - db_warung_pintar
