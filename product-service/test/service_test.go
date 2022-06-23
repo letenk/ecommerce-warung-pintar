@@ -69,7 +69,6 @@ func TestServiceGetListProducts(t *testing.T) {
 		assert.NotEmpty(t, product.Description)
 		assert.NotEmpty(t, product.Price)
 		assert.NotEmpty(t, product.Quantity)
-		assert.NotEmpty(t, product.Quantity)
 		assert.NotEmpty(t, product.CreatedAt)
 		assert.NotEmpty(t, product.UpdatedAt)
 	}
