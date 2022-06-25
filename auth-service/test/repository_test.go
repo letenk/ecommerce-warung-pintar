@@ -39,7 +39,7 @@ func createRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 		// Hash password
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 		user.Password = string(passwordHash)
 
@@ -58,7 +58,7 @@ func createRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 		// Hash password
 		passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 		user.Password = string(passwordHash)
 	}
@@ -88,7 +88,7 @@ func createRandomAccountRepository(t *testing.T, withIsAdmin bool) domain.User {
 
 	err = bcrypt.CompareHashAndPassword([]byte(newUser.Password), []byte(password))
 	if err != nil {
-		log.Fatal("password not exist.")
+		log.Panic("password not exist.")
 	}
 	assert.Nil(t, err)
 
@@ -138,7 +138,7 @@ func TestUserSaveErrorEmailUnique(t *testing.T) {
 	// Hash password
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	user.Password = string(passwordHash)
 
@@ -159,7 +159,7 @@ func TestFindByEmail(t *testing.T) {
 	// Find user by email
 	user, err := userRepository.FindByEmail(newUser.Email)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	assert.Equal(t, newUser.ID, user.ID)

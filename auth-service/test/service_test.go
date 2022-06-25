@@ -48,7 +48,7 @@ func createRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 	// Register
 	newUser, err := userService.Register(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	assert.NotEmpty(t, newUser.ID)
@@ -70,7 +70,7 @@ func createRandomAccountService(t *testing.T, withIsAdmin bool) domain.User {
 
 	err = bcrypt.CompareHashAndPassword([]byte(newUser.Password), []byte(password))
 	if err != nil {
-		log.Fatal("password not exist.")
+		log.Panic("password not exist.")
 	}
 	assert.Nil(t, err)
 
@@ -133,7 +133,7 @@ func TestIsEmailAvailable(t *testing.T) {
 	// Find user by email
 	user, err := userService.IsEmailAvailable(newUser.Email)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	assert.Equal(t, true, user)
@@ -159,7 +159,7 @@ func randomLogin(t *testing.T) domain.User {
 	// Login
 	userLogin, err := userService.Login(payload)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	assert.NotEmpty(t, userLogin.ID)
 	assert.Equal(t, newUser.Fullname, userLogin.Fullname)
@@ -196,7 +196,7 @@ func TestGenerateTokenSuccess(t *testing.T) {
 	// Generate token
 	token, err := userService.GenerateToken(user)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 
 	assert.NotEmpty(t, token)
