@@ -33,6 +33,7 @@ services:
       DB_USER: secret
       DB_PASSWORD: secret
       DB_NAME: products
+      SECRET_JWT: w4run6P1Nt42
     # ports:
     #   - "8802:8802"
     restart: always

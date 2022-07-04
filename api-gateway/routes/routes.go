@@ -12,10 +12,14 @@ func SetupRouter() *gin.Engine {
 
 	api := router.Group("/api/v1")
 
+	// Endpoint auth
 	auth := api.Group("/auth")
 	auth.POST("/register", handler.Register)
 	auth.POST("/login", handler.Login)
 
-	api.POST("/products", handler.CreatePost)
+	// Endpoint products
+	api.POST("/products", handler.CreateProduct)
+	api.GET("/products", handler.GetListProducts)
+
 	return router
 }

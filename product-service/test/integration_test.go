@@ -1,9 +1,11 @@
 package test
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,6 +16,44 @@ import (
 	"github.com/jabutech/ecommerce-warung-pintar/product-service/util"
 	"github.com/stretchr/testify/assert"
 )
+
+func registerRandomUserWithServiceAuth() {
+	user := new(struct {
+		Fullname string `json:"fullname"`
+		Email    string `json:"email"`
+		Address  string `json:"address"`
+		City     string `json:"city"`
+		Province string `json:"province"`
+		Mobile   string `json:"mobile"`
+		Password string `json:"password"`
+		IsAdmin  bool   `json:"is_admin"`
+	})
+
+	client := &http.Client{}
+	jsonValue, err := json.Marshal(user)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	baseURL := fmt.Sprintf("http://%s:8801/api/v1/auth/register", "localhost")
+	request, err := http.NewRequest(http.MethodPost, baseURL, bytes.NewBuffer(jsonValue))
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	request.Header.Add("Content-Type", "application/json")
+	response, err := client.Do(request)
+	if err != nil {
+		log.Panic(err.Error())
+	}
+
+	defer response.Body.Close()
+
+	var jsonData interface{}
+	_ = json.NewDecoder(response.Body).Decode(&jsonData)
+
+	fmt.Println(jsonData)
+}
 
 func createRandomProduct(t *testing.T) {
 	db := util.SetupTestDB()
@@ -61,7 +101,10 @@ func createRandomProduct(t *testing.T) {
 }
 
 func TestCreateRandomProduct(t *testing.T) {
+	registerRandomUserWithServiceAuth()
+
 	createRandomProduct(t)
+
 }
 
 func TestGetListProducts(t *testing.T) {
